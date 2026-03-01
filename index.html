@@ -168,8 +168,8 @@ const Utils = {
   shuffle(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; },
   clamp(v, min, max) { return Math.max(min, Math.min(max, v)); },
   weightedRand(weights) { const total = weights.reduce((a, b) => a + b, 0); let r = Math.random() * total; for (let i = 0; i < weights.length; i++) { r -= weights[i]; if (r <= 0) return i; } return weights.length - 1; },
-  uuid() { return 'xxxx-xxxx'.replace(/x/g, () => Math.floor(Math.random() * 16).toString(16)); },
-  escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); },
+  uuid() { return 'xxxxxxxx-xxxx-xxxx'.replace(/x/g, () => Math.floor(Math.random() * 16).toString(16)); },
+  escAttr(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); },
   stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); },
   formatMoney(n) { if (n >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M'; if (n >= 1000) return '$' + (n / 1000).toFixed(0) + 'K'; return '$' + n; },
   gaussRand(mean, std) { let u = 0, v = 0; while (u === 0) u = Math.random(); while (v === 0) v = Math.random(); return Math.round(mean + std * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)); },
@@ -939,8 +939,7 @@ const SimEngine = {
         p.injured = true;
         p.injuryWeeks = Utils.rand(1, 8);
         if (p.school === G.coach.school) GameEngine.addNews(`${p.name} suffers an injury — out ${p.injuryWeeks} weeks`, 'injury');
-      }
-      if (p.injured) {
+      } else if (p.injured) {
         p.injuryWeeks--;
         if (p.injuryWeeks <= 0) { p.injured = false; p.injuryWeeks = 0; }
       }
@@ -1345,6 +1344,13 @@ const GameEngine = {
     }
     // Update player morale
     this.updatePlayerMorale();
+    // Check NIL compliance
+    const myProg = G.programs.find(p => p.name === G.coach.school);
+    if (myProg) {
+      const nilBudget = NILEngine.calcBudget(myProg);
+      const nilSpent = NILEngine.calcSpending(G.coach.school);
+      if (nilSpent > nilBudget) G.investigationRisk = Math.min(100, G.investigationRisk + 2);
+    }
     this.save();
     UIEngine.render(UIEngine.currentScreen);
   },
@@ -1550,6 +1556,12 @@ const GameEngine = {
       PlayerEngine.developPlayer(p, 50, 5, 10);
       PlayerEngine.advanceYear(p);
     }
+    // Remove players with exhausted eligibility
+    const exhausted = G.players.filter(p => p.eligibilityLeft <= 0);
+    for (const p of exhausted) {
+      if (p.school === G.coach.school) this.addNews(`${p.name} has exhausted eligibility and departs.`, 'general');
+    }
+    G.players = G.players.filter(p => p.eligibilityLeft > 0);
   },
 
   processPreview() {
@@ -1642,7 +1654,7 @@ const WizardUI = {
         <label>Choose Your School</label>
         <div style="max-height:350px;overflow-y:auto;">
           ${schools.map(s => `
-            <div class="school-option ${this.data.school === s.name ? 'selected' : ''}" onclick="WizardUI.selectSchool('${Utils.escHtml(s.name)}')">
+            <div class="school-option ${this.data.school === s.name ? 'selected' : ''}" onclick="WizardUI.selectSchool('${Utils.escAttr(s.name)}')">
               <div class="school-name">${s.name}</div>
               <div class="school-info">Tier ${s.tier} | ${SchoolData.conferences[s.conf].name} | Budget: ${Utils.formatMoney(s.budget)} | Academics: ${s.academic}</div>
             </div>
@@ -1660,14 +1672,14 @@ const WizardUI = {
       <div class="wizard-step">
         <label>Offensive System</label>
         ${OFFENSE_STYLES.map(o => `
-          <div class="school-option ${this.data.offense === o.name ? 'selected' : ''}" onclick="WizardUI.selectOffense('${Utils.escHtml(o.name)}')">
+          <div class="school-option ${this.data.offense === o.name ? 'selected' : ''}" onclick="WizardUI.selectOffense('${Utils.escAttr(o.name)}')">
             <div class="school-name">${o.name}</div>
             <div class="school-info">${o.desc}</div>
           </div>
         `).join('')}
         <label class="mt-8">Defensive System</label>
         ${DEFENSE_STYLES.map(d => `
-          <div class="school-option ${this.data.defense === d.name ? 'selected' : ''}" onclick="WizardUI.selectDefense('${Utils.escHtml(d.name)}')">
+          <div class="school-option ${this.data.defense === d.name ? 'selected' : ''}" onclick="WizardUI.selectDefense('${Utils.escAttr(d.name)}')">
             <div class="school-name">${d.name}</div>
             <div class="school-info">${d.desc}</div>
           </div>
@@ -2434,7 +2446,7 @@ const UIEngine = {
             <div class="scroll-y" style="max-height:500px;">
               <table>
                 <tr><th>School</th><th>Record</th><th>Conf</th><th>Tier</th><th>Rating</th></tr>
-                ${G.programs.sort((a, b) => b.wins - a.wins || a.losses - b.losses).map(p => `
+                ${[...G.programs].sort((a, b) => b.wins - a.wins || a.losses - b.losses).map(p => `
                   <tr style="${p.name === G.coach.school ? 'background:rgba(232,96,28,.1);font-weight:600;' : ''}">
                     <td>${p.name}</td><td>${p.wins}-${p.losses}</td><td class="text-sm">${p.conferenceAbbrev}</td><td>${p.tier}</td><td>${SimEngine.teamRating(p.name)}</td>
                   </tr>
@@ -2481,7 +2493,7 @@ const UIEngine = {
     } else if (tab === 'carousel') {
       content.innerHTML = `<div class="card"><div class="card-title">Coaching Carousel</div>
         <table><tr><th>School</th><th>Coach</th><th>Record</th><th>Conf</th><th>Tier</th></tr>
-          ${G.programs.sort((a, b) => a.tier - b.tier).map(p => `<tr><td>${p.name}</td><td>${p.coach}</td><td>${p.wins}-${p.losses}</td><td class="text-sm">${p.conferenceAbbrev}</td><td>${p.tier}</td></tr>`).join('')}
+          ${[...G.programs].sort((a, b) => a.tier - b.tier).map(p => `<tr><td>${p.name}</td><td>${p.coach}</td><td>${p.wins}-${p.losses}</td><td class="text-sm">${p.conferenceAbbrev}</td><td>${p.tier}</td></tr>`).join('')}
         </table></div>`;
     }
   },
@@ -2519,6 +2531,8 @@ const UIEngine = {
   },
 
   recruitPortalPlayer(id) {
+    const portalOpen = G.phase === 'offseason' || G.week === 8;
+    if (!portalOpen) { alert('Transfer portal is not currently open.'); return; }
     const p = G.portalPlayers.find(pl => pl.id === id);
     if (!p) return;
     const roster = G.players.filter(pl => pl.school === G.coach.school && !pl.walkOn);
@@ -2575,7 +2589,7 @@ const UIEngine = {
     const prog = G.programs.find(p => p.name === G.coach.school);
     const nilBudget = prog ? NILEngine.calcBudget(prog) : 0;
     const nilSpent = NILEngine.calcSpending(G.coach.school);
-    if (nilSpent > nilBudget) G.investigationRisk = Math.min(100, risk + 5);
+    // Investigation risk is updated in advanceWeek, not here in render
 
     el.innerHTML = `
       <h2 style="color:var(--navy);" class="mb-16">NCAA Investigations</h2>
