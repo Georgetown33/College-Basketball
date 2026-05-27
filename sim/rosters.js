@@ -11,14 +11,16 @@ const M = 70; // default morale
 
 const p = (name, pos, overall, tags = {}) => ({ name, pos, overall, morale: M, ...tags });
 
-// ---------------- GEORGETOWN 2026-27 (REAL, verified May 2026) ----------------
-// NOTE: Vyctorius Miller is NOT on this roster — he never committed (Kansas was
-// the favorite). Halaifonua left for Oklahoma State. Confirmed adds: Lowe,
-// Jackson, Machot, Parker (+ freshmen Caldwell/Olivier) and returners.
+// ---------------- GEORGETOWN 2026-27 (verified May 27, 2026) ----------------
+// Primary roster INCLUDES Vyctorius Miller per user report of a same-day commit
+// (not yet independently confirmable in indexed sources; Kansas had been favored).
+// Confirmed adds: Lowe, Jackson, Machot, Parker (+ freshmen Caldwell/Olivier),
+// returners Williams/Landeira/Mulready/Diouf. Halaifonua left for Oklahoma State.
 const GEORGETOWN_2627 = {
   name: 'Georgetown 2026-27',
   roster: [
     p('Jaland Lowe', 'PG', 76),       // high-major lead guard, elite ceiling, injury/eff risk
+    p('Vyctorius Miller', 'SG', 75),  // 10.8/2.7/1.8 on 42/37/86 at Okie St — efficient wing
     p('Josiah Parker', 'SF', 72),     // AAC Freshman of Year (9.6/6.0) — real frontcourt piece
     p('Chol Machot', 'C', 72),        // CAA DPOY, only true rim protector (step-up risk)
     p('Elmarko Jackson', 'SG', 71),   // ex-McDonald's AA (Kansas), offensively unproven
@@ -31,10 +33,10 @@ const GEORGETOWN_2627 = {
   ],
 };
 
-// Optional "with Miller" hypothetical (the user's original premise — NOT real).
-const GEORGETOWN_2627_WITH_MILLER = {
-  name: 'Georgetown 2026-27 (+Miller, hypothetical)',
-  roster: [...GEORGETOWN_2627.roster, p('Vyctorius Miller', 'SG', 75)],
+// Objective alternative: roster WITHOUT Miller (matches what indexed sources confirm).
+const GEORGETOWN_2627_NO_MILLER = {
+  name: 'Georgetown 2026-27 (no Miller)',
+  roster: GEORGETOWN_2627.roster.filter(pl => pl.name !== 'Vyctorius Miller'),
 };
 
 // ---------------- GEORGETOWN 2025-26 (actual: 16-18, 6-14 BE, T-10th) ----------------
@@ -60,4 +62,4 @@ const GEORGETOWN_2526 = {
   ],
 };
 
-module.exports = { GEORGETOWN_2627, GEORGETOWN_2627_WITH_MILLER, GEORGETOWN_2526 };
+module.exports = { GEORGETOWN_2627, GEORGETOWN_2627_NO_MILLER, GEORGETOWN_2526 };
