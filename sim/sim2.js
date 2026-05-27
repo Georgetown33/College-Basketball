@@ -1,40 +1,10 @@
-const { ratings, normalCDF, AVG_EFF, AVG_TEMPO, GAME_SD } = require('./metrics');
+const { rate, project, simGame } = require('./gamemodel');
 const { BIG_EAST } = require('./bigeast');
-const { GEORGETOWN_2627, GEORGETOWN_2627_NO_MILLER, GEORGETOWN_2526 } = require('./rosters');
-
-// Pre-compute ratings once.
-const R = new Map();
-function rate(team) { if (!R.has(team.name)) R.set(team.name, ratings(team)); return R.get(team.name); }
-
-let spareGauss = null;
-function gauss() {
-  if (spareGauss != null) { const g = spareGauss; spareGauss = null; return g; }
-  let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random();
-  const m = Math.sqrt(-2 * Math.log(u)); spareGauss = m * Math.sin(2 * Math.PI * v);
-  return m * Math.cos(2 * Math.PI * v);
-}
-
-// Project A (home) vs B (away). KenPom/Torvik-style efficiency model.
-function project(a, b, neutral) {
-  const ra = rate(a), rb = rate(b);
-  const poss = ra.tempo * rb.tempo / AVG_TEMPO;
-  const aOE = ra.adjO * rb.adjD / AVG_EFF;
-  const bOE = rb.adjO * ra.adjD / AVG_EFF;
-  const hca = neutral ? 0 : 3.5;
-  const ptsA = aOE * poss / 100 + hca / 2;
-  const ptsB = bOE * poss / 100 - hca / 2;
-  const expMargin = ptsA - ptsB;
-  return { expMargin, ptsA, ptsB, winProbA: normalCDF(expMargin / GAME_SD), poss };
-}
-
-function simGame(a, b, neutral) {
-  const { expMargin } = project(a, b, neutral);
-  return expMargin + gauss() * GAME_SD > 0; // true => home (a) wins
-}
+const { GEORGETOWN_2627, GEORGETOWN_2526 } = require('./rosters');
 
 // ---------------------------------------------------------------- ratings table
 function ratingsTable() {
-  const teams = [...BIG_EAST, GEORGETOWN_2627_NO_MILLER, GEORGETOWN_2526];
+  const teams = [...BIG_EAST, GEORGETOWN_2526];
   const rows = teams.map(rate).sort((a, b) => b.adjEM - a.adjEM);
   console.log('2026-27 efficiency ratings (modeled, KenPom/Torvik/EvanMiya-style)\n');
   console.log('  Team                          KP   Torvik EvanM | Cons   AdjO   AdjD  Tempo Barthag ~NatRk');
@@ -84,12 +54,11 @@ function seasonSim(N = 20000) {
 function h2h(label, a, b) {
   const neu = project(a, b, true);
   console.log(`  ${label}: ${a.name} ${(neu.winProbA * 100).toFixed(1)}% / ${b.name} ${((1 - neu.winProbA) * 100).toFixed(1)}%` +
-    `  | proj ${neu.ptsA.toFixed(0)}-${neu.ptsB.toFixed(0)} (line ${a.name.split(' ')[0]} ${neu.expMargin >= 0 ? '-' : '+'}${Math.abs(neu.expMargin).toFixed(1)})`);
+    `  | proj ${neu.ptsA.toFixed(0)}-${neu.ptsB.toFixed(0)} (line ${a.name.split(' ')[0]} ${neu.expMargin >= 0 ? '-' : '+'}${Math.abs(neu.expMargin).toFixed(1)}, SD ${neu.sd.toFixed(1)})`);
 }
 
 ratingsTable();
 seasonSim();
 console.log('\nKey head-to-heads (neutral court, efficiency model):');
-h2h('GU(+Miller) vs GU 2025-26 ', GEORGETOWN_2627, GEORGETOWN_2526);
-h2h('GU(+Miller) vs Providence  ', GEORGETOWN_2627, BIG_EAST.find(t => t.name === 'Providence'));
-h2h('GU(no Miller) vs Providence', GEORGETOWN_2627_NO_MILLER, BIG_EAST.find(t => t.name === 'Providence'));
+h2h('GU vs GU 2025-26', GEORGETOWN_2627, GEORGETOWN_2526);
+h2h('GU vs Providence', GEORGETOWN_2627, BIG_EAST.find(t => t.name === 'Providence'));

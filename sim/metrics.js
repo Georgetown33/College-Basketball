@@ -77,6 +77,8 @@ const CAL_SLOPE = 0.734, CAL_INT = -3.1;
 // fit to #10->+23 and #52->+10.5 (matches typical KenPom/Torvik distribution).
 const RANK_A = 193.4, RANK_K = 0.1288;
 
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
 function normalCDF(z) {
   // Abramowitz-Stegun
   const t = 1 / (1 + 0.2316419 * Math.abs(z));
@@ -95,8 +97,8 @@ function allocateMinutes(roster) {
 
 function rawTeam(roster) {
   const players = allocateMinutes(roster);
-  let offEM = 0, defEM = 0, em = 0;
-  const nets = [];
+  let offEM = 0, defEM = 0, em = 0, shooterWt = 0, bigWt = 0, slasherWt = 0, totW = 0;
+  const nets = [], ovrs = [];
   for (const p of players) {
     const net = (p.overall - BASELINE) * SLOPE;
     const offShare = OFF_SHARE[p.name] ?? POS_OFF_SHARE[p.position] ?? 0.55;
@@ -104,10 +106,54 @@ function rawTeam(roster) {
     offEM += w * net * offShare;
     defEM += w * net * (1 - offShare);
     em += w * net;
-    nets.push(net);
+    totW += w;
+    if (offShare >= 0.66) shooterWt += w;                       // perimeter shooters/scorers
+    if (p.position === 'C' || p.position === 'PF') bigWt += w;    // frontcourt size
+    if (offShare <= 0.40 || p.position === 'C') slasherWt += w;   // rim/interior reliance
+    nets.push(net); ovrs.push(p.overall);
   }
-  nets.sort((a, b) => b - a);
-  return { offEM, defEM, em, bestNet: nets[0], top2net: nets[0] + (nets[1] || 0) };
+  nets.sort((a, b) => b - a); ovrs.sort((a, b) => b - a);
+  const top3 = ovrs.slice(0, 3).reduce((a, b) => a + b, 0) / 3;
+  const depth68 = ovrs.slice(5, 8); // 6th-8th men
+  const back = depth68.length ? depth68.reduce((a, b) => a + b, 0) / depth68.length : top3 - 12;
+  return {
+    offEM, defEM, em, bestNet: nets[0], top2net: nets[0] + (nets[1] || 0),
+    shooterShare: shooterWt / totW, bigShare: bigWt / totW, slasherShare: slasherWt / totW,
+    dropoff: top3 - back, rotation: players.length,
+  };
+}
+
+// Per-team game-to-game volatility (points of margin SD contributed by this team).
+// Combined game SD between A & B = sqrt(sigmaA^2 + sigmaB^2). Base 7.78 -> ~11 combined.
+function volatility(team) {
+  const meta = META[team.name] || { ret: 0.30 };
+  const r = rawTeam(team.roster);
+  let s = 7.78;
+  s += clamp((r.shooterShare - 0.42) * 3.2, -0.7, 1.1); // 3pt reliance -> swingy
+  s += clamp((r.dropoff - 7) * 0.10, -0.4, 0.8);          // thin depth -> swingy
+  s -= clamp((meta.ret - 0.30) * 2.2, -0.5, 0.9);         // experience -> steady
+  s -= clamp((r.bigShare - 0.40) * 1.4, -0.3, 0.5);       // size/defense -> steady
+  return clamp(s, 6.7, 9.2);
+}
+
+// Four Factors (Dean Oliver), model-derived from roster composition + efficiency.
+// Returned as {oEFG,oTOV,oORB,oFTR, dEFG,dTOV,dORB,dFTR} in conventional units.
+function fourFactors(team) {
+  const r = rawTeam(team.roster);
+  const meta = META[team.name] || { ret: 0.30 };
+  const rt = ratings(team);
+  const oTilt = (rt.adjO - 109);  // offense above high-major baseline
+  const dTilt = (99 - rt.adjD);   // defense above baseline (higher = better D)
+  return {
+    oEFG: 50.0 + oTilt * 0.55 + (r.shooterShare - 0.42) * 9,
+    oTOV: 17.6 - (meta.ret - 0.30) * 4 - oTilt * 0.10 + (r.shooterShare - 0.42) * 2,
+    oORB: 30.0 + (r.bigShare - 0.30) * 16 + oTilt * 0.05,
+    oFTR: 31 + (r.slasherShare - 0.40) * 16 - (r.shooterShare - 0.42) * 6,
+    dEFG: 50.0 - dTilt * 0.55,
+    dTOV: 17.6 + (dTilt) * 0.20,
+    dORB: 30.0 - (r.bigShare - 0.30) * 14 - dTilt * 0.15,   // lower = better (fewer opp ORB)
+    dFTR: 31 - dTilt * 0.30,
+  };
 }
 
 function ratings(team) {
@@ -150,4 +196,6 @@ function ratings(team) {
   };
 }
 
-module.exports = { ratings, normalCDF, AVG_EFF, AVG_TEMPO, GAME_SD, META };
+function rankFromEM(em) { return Math.max(1, Math.min(364, Math.round(RANK_A * Math.exp(-RANK_K * em)))); }
+
+module.exports = { ratings, volatility, fourFactors, rawTeam, rankFromEM, normalCDF, clamp, AVG_EFF, AVG_TEMPO, GAME_SD, META };
