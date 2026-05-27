@@ -48,11 +48,14 @@ const OFF_SHARE = {
 };
 
 // Per-team meta: returning-minutes share (continuity) + tempo + optional real anchor.
-// anchorEM = a real published preseason AdjEM (e.g. BartTorvik) to blend toward.
+// anchorEM = real published preseason AdjEM to blend toward. Only 3 verifiable
+// 2026-27 BartTorvik preseason ranks were retrievable (site is browser-gated):
+//   UConn #10, Marquette #27, St. John's #52 -> AdjEM via the realistic rank curve
+//   below. KenPom/EvanMiya don't publish preseason until fall (n/a).
 const META = {
-  'UConn':              { ret: 0.40, tempo: 66.5 },
-  "St. John's":         { ret: 0.25, tempo: 69.5 },
-  'Marquette':          { ret: 0.68, tempo: 68.0 },
+  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 23.0 },  // Torvik #10
+  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 10.5 },  // Torvik #52 (roster-incomplete caveat)
+  'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27
   'Creighton':          { ret: 0.55, tempo: 67.5 },
   'Villanova':          { ret: 0.18, tempo: 64.5 },
   'Xavier':             { ret: 0.15, tempo: 68.0 },
@@ -65,6 +68,14 @@ const META = {
   'Georgetown 2025-26': { ret: 0.25, tempo: 66.5 },
 };
 const ANCHOR_WEIGHT = 0.5; // blend weight toward a real published anchor when present
+
+// Global calibration: fit raw-model AdjEM -> real scale using the two "clean"
+// Torvik anchors (UConn model +35.6 -> #10/+23; Marquette model +24.7 -> #27/+15).
+// realEM = CAL_SLOPE*modelEM + CAL_INT. Corrects the model's hot top-end.
+const CAL_SLOPE = 0.734, CAL_INT = -3.1;
+// Realistic rank<->AdjEM curve: rank = RANK_A * exp(-RANK_K * AdjEM)
+// fit to #10->+23 and #52->+10.5 (matches typical KenPom/Torvik distribution).
+const RANK_A = 193.4, RANK_K = 0.1288;
 
 function normalCDF(z) {
   // Abramowitz-Stegun
@@ -114,26 +125,27 @@ function ratings(team) {
   const starAdj = Math.max(0, r.bestNet - 5) * 0.5; // single-best-player impact
   const defAdj = (r.defEM - 1.0) * 0.5;            // defensive identity
 
-  const kenpom   = baseEM + expAdj * 0.80 + talentAdj * 0.30;
-  const torvik   = baseEM + expAdj * 0.30 + talentAdj * 0.90;
-  const evanmiya = baseEM + expAdj * 0.20 + starAdj + defAdj;
+  const cal = em => CAL_SLOPE * em + CAL_INT; // raw-model -> real scale
+  const kenpom   = cal(baseEM + expAdj * 0.80 + talentAdj * 0.30);
+  const torvik   = cal(baseEM + expAdj * 0.30 + talentAdj * 0.90);
+  const evanmiya = cal(baseEM + expAdj * 0.20 + starAdj + defAdj);
   let consensus  = (kenpom + torvik + evanmiya) / 3;
 
   // Blend toward a real published anchor if provided
   if (meta.anchorEM != null) consensus = (1 - ANCHOR_WEIGHT) * consensus + ANCHOR_WEIGHT * meta.anchorEM;
 
-  // Distribute consensus delta across O/D so AdjO-AdjD == consensus
+  // Distribute final delta across O/D so AdjO-AdjD == consensus
   const delta = consensus - baseEM;
   const adjO = baseAdjO + delta / 2;
   const adjD = baseAdjD - delta / 2;
 
   const tempo = meta.tempo;
   const barthag = normalCDF((consensus * tempo / 100) / GAME_SD);
-  const natRank = Math.max(1, Math.min(364, Math.round(210 * Math.exp(-0.1417 * consensus))));
+  const natRank = Math.max(1, Math.min(364, Math.round(RANK_A * Math.exp(-RANK_K * consensus))));
 
   return {
     name: team.name, adjO, adjD, adjEM: consensus, tempo, barthag, natRank,
-    systems: { kenpom, torvik, evanmiya }, ret: meta.ret,
+    systems: { kenpom, torvik, evanmiya }, ret: meta.ret, anchored: meta.anchorEM != null,
     spread: Math.max(kenpom, torvik, evanmiya) - Math.min(kenpom, torvik, evanmiya),
   };
 }

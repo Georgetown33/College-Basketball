@@ -41,7 +41,7 @@ function ratingsTable() {
   console.log('  ' + '-'.repeat(94));
   for (const r of rows) {
     const s = r.systems;
-    console.log('  ' + r.name.padEnd(30) +
+    console.log('  ' + (r.name + (r.anchored ? ' *' : '')).padEnd(30) +
       `${s.kenpom.toFixed(1).padStart(5)} ${s.torvik.toFixed(1).padStart(6)} ${s.evanmiya.toFixed(1).padStart(5)} |` +
       `${('+' + r.adjEM.toFixed(1)).padStart(6)} ${r.adjO.toFixed(1).padStart(6)} ${r.adjD.toFixed(1).padStart(6)} ` +
       `${r.tempo.toFixed(1).padStart(5)} ${r.barthag.toFixed(3).padStart(7)} ${String(r.natRank).padStart(5)}`);
