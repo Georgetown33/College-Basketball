@@ -24,6 +24,7 @@ const GEORGETOWN_2627 = {
     p('Josiah Parker', 'SF', 72),     // AAC Freshman of Year (9.6/6.0) — real frontcourt piece
     p('Chol Machot', 'C', 72),        // CAA DPOY, only true rim protector (step-up risk)
     p('Elmarko Jackson', 'SG', 71),   // ex-McDonald's AA (Kansas), offensively unproven
+    p('Luka Scuka', 'PF', 69),        // 6-10 Slovenian, German BBL (Braunschweig) — real frontcourt help
     p('Caleb Williams', 'SF', 68),    // 33 starts, 8.8 ppg returner
     p('Gabriel Landeira', 'PG', 66),  // GLOBL JAM MVP, unproven in NCAA
     p('Justin Caldwell', 'PF', 62),   // 6-9 freshman (top-150)
