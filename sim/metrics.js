@@ -45,6 +45,11 @@ const OFF_SHARE = {
   'Jordan Ellerbee': 0.70, 'Wes Enis': 0.64, 'Eduardo Klafke': 0.72,
   'Kareem Thomas': 0.70, 'Austin Swartz': 0.70, 'Ade Popoola': 0.66,
   'Kahmare Holmes': 0.66, 'Silas Demary Jr.': 0.62, 'Langston Love': 0.72,
+  // audit additions
+  'Tounde Yessoufou': 0.64, 'Nolan Minessale': 0.68, 'Chance Westry': 0.50,
+  'Wilson Jacques': 0.34, 'Rolyns Aligbe': 0.40, 'Trevon Carter-Givens': 0.30,
+  'Abdulai Fanta Kabba': 0.30, 'Devin Williams': 0.30, 'Del Jones': 0.68,
+  'Ryan Sabol': 0.74, 'Kwame Evans Jr.': 0.48, 'Devin Royal': 0.60,
 };
 
 // Per-team meta: returning-minutes share (continuity) + tempo + optional real anchor.
@@ -54,7 +59,7 @@ const OFF_SHARE = {
 //   below. KenPom/EvanMiya don't publish preseason until fall (n/a).
 const META = {
   'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 23.0 },  // Torvik #10
-  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 10.5 },  // Torvik #52 (roster-incomplete caveat)
+  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 13.5 },  // Torvik #52 was pre-Yessoufou (stale); raised
   'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27
   'Creighton':          { ret: 0.55, tempo: 67.5 },
   'Villanova':          { ret: 0.18, tempo: 64.5 },
