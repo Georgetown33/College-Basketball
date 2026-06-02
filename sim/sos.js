@@ -58,7 +58,13 @@ const TIER = {
   'Jovan Milicevic': 'RET', 'Caleb Williams': 'RET',
 };
 
+// Disabled: grades are now PRODUCTION-based (agents already discounted each
+// player's output for level of competition), so applying SOS again would
+// double-count. Kept for reference / non-production grade sets.
+const SOS_ENABLED = false;
+
 function sosOverall(player) {
+  if (!SOS_ENABLED) return player.overall;
   const tier = TIER[player.name] || 'HM';
   const f = FACTOR[tier];
   if (f === 1.0) return player.overall;
