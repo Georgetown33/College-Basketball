@@ -58,8 +58,8 @@ const OFF_SHARE = {
 //   UConn #10, Marquette #27, St. John's #52 -> AdjEM via the realistic rank curve
 //   below. KenPom/EvanMiya don't publish preseason until fall (n/a).
 const META = {
-  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 23.0 },  // Torvik #10
-  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 13.5 },  // Torvik #52 was pre-Yessoufou (stale); raised
+  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 26.0 },  // revised: blend Torvik #10 w/ polls (SI#2, CBS top-5) -> ~#6-7
+  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 16.5 },  // revised up: Yessoufou makes Torvik #52 stale; polls ~#13-15 -> ~#21
   'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27
   'Creighton':          { ret: 0.55, tempo: 67.5 },
   'Villanova':          { ret: 0.18, tempo: 64.5 },

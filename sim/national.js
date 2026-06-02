@@ -38,9 +38,9 @@ const OTHER_CONF = [
   { team: 'Arizona', conf: 'Big 12', rank: 5 },     // SI#4, ESPN#5, Torvik#3-6
   { team: 'Houston', conf: 'Big 12', rank: 8 },     // Torvik#3, ESPN#8-10, SI#10, CBS#14
   { team: 'Iowa State', conf: 'Big 12', rank: 12 }, // ESPN#12, CBS#11, SI#14
-  { team: 'BYU', conf: 'Big 12', rank: 16 },        // SI#9, ESPN#22 (high variance)
+  { team: 'BYU', conf: 'Big 12', rank: 20 },        // revised down: lost Dybantsa (likely #1 pick) to NBA; SI#9 stale
   { team: 'TCU', conf: 'Big 12', rank: 19 },        // ESPN#16, CBS#19
-  { team: 'Texas Tech', conf: 'Big 12', rank: 20 }, // CBS#16, SI#23 (Toppin ACL risk)
+  { team: 'Texas Tech', conf: 'Big 12', rank: 22 }, // revised down: Toppin (AA) on ACL recovery, may miss half the year
   { team: 'Kansas', conf: 'Big 12', rank: 21 },     // ESPN#18, SI#19, CBS#25
   { team: 'Baylor', conf: 'Big 12', rank: 30 },     // n/a in polls; bubble
   // ---- context: Big Ten / WCC top tier (outside requested scope, needed so the
