@@ -61,7 +61,7 @@ const META = {
   'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 26.0 },  // revised: blend Torvik #10 w/ polls (SI#2, CBS top-5) -> ~#6-7
   "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 16.5 },  // revised up: Yessoufou makes Torvik #52 stale; polls ~#13-15 -> ~#21
   'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27
-  'Creighton':          { ret: 0.55, tempo: 67.5 },
+  'Creighton':          { ret: 0.55, tempo: 67.5, anchorEM: 13.0 },  // Torvik preseason ~#36 / 5th in BE
   'Villanova':          { ret: 0.18, tempo: 64.5 },
   'Xavier':             { ret: 0.15, tempo: 68.0 },
   'Providence':         { ret: 0.06, tempo: 69.0 },
