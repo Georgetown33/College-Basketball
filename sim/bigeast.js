@@ -1,8 +1,9 @@
-// 2026-27 Big East rosters with PRODUCTION-BASED grades from an 11-team,
-// player-by-player audit of each player's actual college output (best season,
-// adjusted for level of competition) + recruiting profiles for freshmen.
-// Grades already embed the competition discount, so the SOS layer is disabled.
-// Georgetown lives in rosters.js.
+// 2026-27 Big East rosters — OPPONENT-ADJUSTED production grades from an 11-team
+// advanced-analytics audit: each player's efficiency (TS%/eFG%/PER/WS), usage,
+// and role, discounted by the LEVEL of competition faced. Grades reward efficient
+// production vs strong opponents; punish empty volume and weak-league stats.
+// SOS layer disabled and Torvik anchors disabled (ANCHOR_WEIGHT=0) so the ranking
+// is purely bottom-up player analytics. Georgetown lives in rosters.js.
 
 const { GEORGETOWN_2627 } = require('./rosters');
 
@@ -10,87 +11,87 @@ const M = 70;
 const p = (name, pos, overall) => ({ name, pos, overall, morale: M });
 
 const BIG_EAST = [
-  // Demary/Mullins proven; rest pedigree-over-production. Machowski SoCon-discounted.
+  // Demary (All-BE + All-Def, led BE assists) the standout; Hines elite per-min rim protection.
   { name: 'UConn', roster: [
-    p('Silas Demary Jr.', 'PG', 77), p('Braylon Mullins', 'SG', 76),
-    p('Nils Machowski', 'SG', 70), p('Najai Hines', 'C', 68),
-    p('Nikolas Khamenia', 'SF', 66), p('Colben Landrew', 'SF', 66),
-    p('Junior County', 'PG', 62), p('Jayden Ross', 'SF', 62),
-    p('Oskar Giltay', 'C', 60),
+    p('Silas Demary Jr.', 'PG', 80), p('Braylon Mullins', 'SG', 75),
+    p('Najai Hines', 'C', 73), p('Nikolas Khamenia', 'SF', 68),
+    p('Nils Machowski', 'SG', 66), p('Colben Landrew', 'SF', 66),
+    p('Jayden Ross', 'SF', 65), p('Oskar Giltay', 'C', 63),
+    p('Junior County', 'PG', 62),
   ]},
-  // Yessoufou (82) + Freeman (78) the league's best proven scoring duo; depth unproven/intl.
+  // Yessoufou (80) + Jackson (77) + Freeman (74) — best proven Tier-A scoring trio in the league.
   { name: "St. John's", roster: [
-    p('Tounde Yessoufou', 'SG', 82), p('Donnie Freeman', 'SF', 78),
-    p('Quinn Ellis', 'PG', 74), p('Ian Jackson', 'SG', 70),
-    p('Babacar Sane', 'PF', 66), p('Kyle Cuffe Jr.', 'PG', 62),
-    p('Theo Edema', 'C', 62), p('Ruben Prey', 'C', 60),
-    p('Lazar Stojkovic', 'C', 60), p('Djordije Jovanovic', 'SF', 58),
+    p('Tounde Yessoufou', 'SG', 80), p('Ian Jackson', 'SG', 77),
+    p('Donnie Freeman', 'SF', 74), p('Quinn Ellis', 'PG', 72),
+    p('Babacar Sane', 'PF', 66), p('Ruben Prey', 'C', 63),
+    p('Kyle Cuffe Jr.', 'PG', 62), p('Djordije Jovanovic', 'SF', 62),
+    p('Lazar Stojkovic', 'C', 60), p('Theo Edema', 'C', 58),
   ]},
-  // Deep, proven (Big Ten + productive mid-majors). No star, five 71+ producers.
+  // Two efficient Big Ten bigs (Evans/Royal) + proven BE scorer Perkins. Deep, balanced.
   { name: 'Villanova', roster: [
-    p('Devin Royal', 'SF', 76), p('Kwame Evans Jr.', 'PF', 75),
-    p('Buddy Simmons', 'SF', 74), p('Jake Fiegen', 'SG', 72),
-    p('Elijah Crawford', 'PG', 71), p('Matt Hodge', 'SG', 67),
-    p('Tyler Perkins', 'SG', 64), p('Adam Oumiddoch', 'SG', 63),
+    p('Kwame Evans Jr.', 'PF', 80), p('Devin Royal', 'SF', 77),
+    p('Tyler Perkins', 'SG', 75), p('Jake Fiegen', 'SG', 71),
+    p('Buddy Simmons', 'SF', 70), p('Matt Hodge', 'SG', 68),
+    p('Elijah Crawford', 'PG', 67), p('Adam Oumiddoch', 'SG', 62),
     p('Nico Onyekwere', 'C', 58),
   ]},
-  // Gwath elite defensively (modest scoring); Holmes/Cotton productive mid-major scorers.
+  // Gwath (80, elite defensive metrics) carries it; Popoola most efficient (AAC-leading 3P%).
   { name: 'DePaul', roster: [
-    p('Magoon Gwath', 'C', 78), p('Kahmare Holmes', 'SF', 73),
-    p('Koree Cotton', 'SG', 70), p('Layden Blocker', 'PG', 69),
-    p('Ade Popoola', 'SF', 67), p('Wilson Jacques', 'PF', 66),
-    p('Noah Meeusen', 'SG', 63), p('Kruz McClure', 'SF', 60),
+    p('Magoon Gwath', 'C', 80), p('Ade Popoola', 'SF', 71),
+    p('Kahmare Holmes', 'SF', 70), p('Koree Cotton', 'SG', 68),
+    p('Wilson Jacques', 'PF', 66), p('Layden Blocker', 'PG', 66),
+    p('Noah Meeusen', 'SG', 65), p('Kruz McClure', 'SF', 60),
     p('Fabian Flores', 'C', 58),
   ]},
-  // Mack (Big East) + Byrd proven; deep, balanced, no high-end scorer.
+  // Mack (BE) + Byrd (elite two-way D) lead a deep, balanced, no-star group.
   { name: 'Providence', roster: [
-    p('Malik Mack', 'PG', 76), p('Miles Byrd', 'SG', 75),
-    p('Devin Vanterpool', 'SG', 72), p('Arrinten Page', 'C', 71),
-    p('Ryan Mela', 'SG', 70), p('Ryan Sabol', 'SG', 69),
-    p('Dink Pate', 'SG', 67), p('Samson Aletan', 'C', 65),
-    p('Leonardo Marangon', 'SF', 64), p('Gavin Hightower', 'PG', 61),
+    p('Malik Mack', 'PG', 75), p('Miles Byrd', 'SG', 74),
+    p('Devin Vanterpool', 'SG', 71), p('Arrinten Page', 'C', 70),
+    p('Ryan Mela', 'SG', 70), p('Ryan Sabol', 'SG', 68),
+    p('Dink Pate', 'SG', 66), p('Samson Aletan', 'C', 63),
+    p('Gavin Hightower', 'PG', 61), p('Leonardo Marangon', 'SF', 60),
   ]},
-  // --- Georgetown (production-graded, in rosters.js) ---
+  // --- Georgetown (opponent-adjusted grades, in rosters.js) ---
   GEORGETOWN_2627,
-  // Del Jones (17.2 Big South) leads; deep but all mid/low-major production, no proven BE scorer.
+  // Williams (AAC rim protection) + Del Jones + Brown lead; deep but mid/low-major sourced.
   { name: 'Seton Hall', roster: [
-    p('Del Jones', 'PG', 74), p('Devin Williams', 'C', 72),
-    p('Rodney Brown Jr.', 'SF', 72), p('Roddie Anderson III', 'PG', 71),
-    p('Kareem Thomas', 'SG', 70), p('Simeon Wilcher', 'SG', 68),
-    p('Mayar Wol', 'PF', 67), p('Trey Parker', 'PG', 62),
-    p('Abdulai Fanta Kabba', 'C', 61), p('Chris Nwuli', 'PF', 60),
+    p('Devin Williams', 'C', 71), p('Del Jones', 'PG', 70),
+    p('Rodney Brown Jr.', 'SF', 70), p('Mayar Wol', 'PF', 69),
+    p('Kareem Thomas', 'SG', 68), p('Roddie Anderson III', 'PG', 64),
+    p('Simeon Wilcher', 'SG', 63), p('Abdulai Fanta Kabba', 'C', 62),
+    p('Trey Parker', 'PG', 60), p('Chris Nwuli', 'PF', 58),
   ]},
-  // No proven high-major production; top end is a cluster of mid/low-major scorers.
+  // Djulovic (ABA pro) top; cluster of low-major producers, high-major guys barely played.
   { name: 'Butler', roster: [
-    p('Jalen Jackson', 'PG', 74), p('Jordan Ellerbee', 'SG', 71),
-    p('Asim Djulovic', 'PF', 70), p('Treyson Anderson', 'PF', 69),
-    p('Christian Moore', 'SF', 66), p('Herly Brutus', 'SF', 65),
-    p('Drayton Jones', 'C', 64), p('Eduardo Klafke', 'SG', 63),
-    p('Samis Calderon', 'PF', 58), p('Baron Walker', 'SF', 58),
+    p('Asim Djulovic', 'PF', 70), p('Jalen Jackson', 'PG', 68),
+    p('Drayton Jones', 'C', 67), p('Jordan Ellerbee', 'SG', 67),
+    p('Treyson Anderson', 'PF', 65), p('Herly Brutus', 'SF', 63),
+    p('Eduardo Klafke', 'SG', 62), p('Baron Walker', 'SF', 60),
+    p('Samis Calderon', 'PF', 59), p('Christian Moore', 'SF', 58),
   ]},
-  // Nigel James (84) is the league's best player; most returning production in the BE.
+  // Nigel James (80) the headline; Parham best EvanMiya BPR on team. Minessale volume Tier-D discounted.
   { name: 'Marquette', roster: [
-    p('Nigel James', 'PG', 84), p('Sananda Fru', 'C', 72),
-    p('Nolan Minessale', 'PG', 70), p('Adrien Stevens', 'SG', 69),
-    p('Royce Parham', 'PF', 68), p('Alex Egbuonu', 'PF', 65),
-    p('Ethan Johnston', 'SF', 61), p('Damarius Owens', 'SG', 60),
-    p('Nash Walker', 'SG', 60), p('Michael Phillips', 'SF', 58),
+    p('Nigel James', 'PG', 80), p('Sananda Fru', 'C', 74),
+    p('Royce Parham', 'PF', 73), p('Adrien Stevens', 'SG', 71),
+    p('Nolan Minessale', 'PG', 69), p('Damarius Owens', 'SG', 63),
+    p('Alex Egbuonu', 'PF', 62), p('Ethan Johnston', 'SF', 59),
+    p('Nash Walker', 'SG', 58), p('Michael Phillips', 'SF', 58),
   ]},
-  // Deep, balanced, proven returners + Big East-tested Erhunmwunse. Enis the lead scorer.
+  // Erhunmwunse (76, elite TS rim-runner, BE-tested) + Enis + Swartz; deepest efficient core.
   { name: 'Creighton', roster: [
-    p('Wes Enis', 'PG', 74), p('Oswin Erhunmwunse', 'C', 73),
-    p('Austin Swartz', 'SG', 72), p('Jasen Green', 'PF', 71),
-    p('BJ Davis', 'PG', 71), p('Jackson McAndrew', 'SF', 68),
-    p('Isaac Traudt', 'SF', 65), p('Trevon Carter-Givens', 'C', 63),
-    p('Kayden Edwards', 'SG', 60), p('Hudson Greer', 'SG', 60),
+    p('Oswin Erhunmwunse', 'C', 76), p('Wes Enis', 'PG', 74),
+    p('Austin Swartz', 'SG', 73), p('Jasen Green', 'PF', 71),
+    p('BJ Davis', 'PG', 70), p('Jackson McAndrew', 'SF', 66),
+    p('Isaac Traudt', 'SF', 65), p('Kayden Edwards', 'SG', 63),
+    p('Hudson Greer', 'SG', 61), p('Trevon Carter-Givens', 'C', 59),
   ]},
-  // Four proven high-major starters (Westry/Nwoko/Milicevic/Washington) — deepest proven core.
+  // Nwoko (80, 61% FG) + Milicevic (78, 43% 3PT) — most efficient Tier-A duo in the league.
   { name: 'Xavier', roster: [
-    p('Chance Westry', 'PG', 75), p('Michael Nwoko', 'C', 75),
-    p('Jovan Milicevic', 'PF', 73), p('Tru Washington', 'SG', 72),
-    p('Ruben Dominguez', 'SG', 70), p('Rolyns Aligbe', 'PF', 66),
-    p('Gabriel Pozzato', 'SF', 64), p('Kalek House', 'PG', 63),
-    p('Asher Elson', 'SF', 63), p('Kason Westphal', 'C', 58),
+    p('Michael Nwoko', 'C', 80), p('Jovan Milicevic', 'PF', 78),
+    p('Chance Westry', 'PG', 73), p('Tru Washington', 'SG', 72),
+    p('Ruben Dominguez', 'SG', 71), p('Rolyns Aligbe', 'PF', 64),
+    p('Gabriel Pozzato', 'SF', 62), p('Kalek House', 'PG', 60),
+    p('Asher Elson', 'SF', 60), p('Kason Westphal', 'C', 52),
   ]},
 ];
 

@@ -11,27 +11,27 @@ const M = 70; // default morale
 
 const p = (name, pos, overall, tags = {}) => ({ name, pos, overall, morale: M, ...tags });
 
-// ---------------- GEORGETOWN 2026-27 (PRODUCTION-graded) ----------------
-// Grades = actual college/pro output, competition-adjusted (per per-player audit).
-// Miller 70 (10.8 ppg modest volume), Lowe 69 (16.8 ppg but 37.6 FG/26.6 3PT at
-// Pitt — brutal efficiency), Parker 70 (rising AAC frosh), Scuka 69 (proven BBL
-// stretch big), Machot 68 (CAA DPOY, 79 blocks, thin offense), E.Jackson 60
-// (never produced at Kansas, post-ACL). No proven high-major star on the roster.
+// ---------------- GEORGETOWN 2026-27 (OPPONENT-ADJUSTED grades) ----------------
+// Advanced-analytics audit (efficiency x usage x competition). Brutal on the
+// "pedigree" guards: Lowe 64 (50.5% TS / 38% FG at Pitt — inefficient volume),
+// Miller 68 (modest full-season output, mediocre 3P), Machot 63 (elite blocks but
+// CAA-inflated, putback-level offense), E.Jackson 60 (never produced at Kansas).
+// No Georgetown player grades above 68 — lowest team-best in the Big East.
 const GEORGETOWN_2627 = {
   name: 'Georgetown 2026-27',
   roster: [
-    p('Vyctorius Miller', 'SG', 70),  // OK St 10.8/2.7 on 41.8/37.5/85.7 — modest volume
-    p('Josiah Parker', 'SF', 70),     // FAU 9.8/6.0, 12.7/8.4 in AAC play — ascending
-    p('Jaland Lowe', 'PG', 69),       // Pitt 16.8 ppg but 37.6 FG / 26.6 3PT — inefficient
-    p('Luka Scuka', 'PF', 69),        // German BBL 9.0/5.7, proven pro stretch big
-    p('Chol Machot', 'C', 68),        // Charleston CAA DPOY, 79 blocks (top-10 NCAA)
-    p('Gabriel Landeira', 'PG', 65),  // Brazil NBB 13.5/5.5a, GLOBL JAM MVP — unproven NCAA
-    p('Justin Caldwell', 'PF', 63),   // top-130 freshman, 7-1 wingspan rim protector
-    p('Caleb Williams', 'SF', 62),    // GU 4.3/3.8 returner — glue/role
-    p('Elmarko Jackson', 'SG', 60),   // never produced at Kansas (4.6 career), post-ACL
-    p('Kayvaun Mulready', 'SG', 58),  // deep-bench toughness guard
-    p('Athan Olivier', 'SG', 58),     // undersized project freshman
-    p('Seal Diouf', 'C', 58),         // depth center, minimal production
+    p('Vyctorius Miller', 'SG', 68),  // Okla St 10.8, decent-not-elite efficiency
+    p('Josiah Parker', 'SF', 67),     // FAU 51.8% FG + rebounding, Tier-B AAC
+    p('Jaland Lowe', 'PG', 64),       // Pitt 16.8 but 50.5% TS — inefficient volume
+    p('Luka Scuka', 'PF', 64),        // German BBL stretch 4, 44.5/33.6, low reb
+    p('Chol Machot', 'C', 63),        // CAA DPOY blocks, putback offense — comp-discounted
+    p('Caleb Williams', 'SF', 62),    // low-usage BE glue, eFG 50.9 / PER 10.6
+    p('Gabriel Landeira', 'PG', 60),  // Brazil NBB playmaker, unproven NCAA
+    p('Elmarko Jackson', 'SG', 60),   // never produced at Kansas (40.6% FG), post-ACL
+    p('Justin Caldwell', 'PF', 58),   // freshman, no college data
+    p('Kayvaun Mulready', 'SG', 58),  // deep-bench
+    p('Seal Diouf', 'C', 58),         // redshirted, no sample
+    p('Athan Olivier', 'SG', 57),     // freshman project
   ],
 };
 

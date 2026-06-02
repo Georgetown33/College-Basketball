@@ -72,7 +72,8 @@ const META = {
   'Georgetown 2026-27 (no Miller)': { ret: 0.30, tempo: 66.5 },
   'Georgetown 2025-26': { ret: 0.25, tempo: 66.5 },
 };
-const ANCHOR_WEIGHT = 0.5; // blend weight toward a real published anchor when present
+const ANCHOR_WEIGHT = 0.0; // anchors OFF: ranking is pure bottom-up player analytics
+                           // (opponent-adjusted production), not poll/Torvik-blended
 
 // Global calibration: fit raw-model AdjEM -> real scale using the two "clean"
 // Torvik anchors (UConn model +35.6 -> #10/+23; Marquette model +24.7 -> #27/+15).
