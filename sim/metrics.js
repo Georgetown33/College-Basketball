@@ -92,8 +92,12 @@ function normalCDF(z) {
   return z > 0 ? 1 - p : p;
 }
 
+const { sosOverall } = require('./sos');
+
 function allocateMinutes(roster) {
-  const sorted = [...roster].sort((a, b) => b.overall - a.overall).slice(0, 10);
+  // Apply strength-of-competition translation, then sort/allocate on adjusted grade.
+  const adj = roster.map(p => ({ ...p, overall: sosOverall(p) }));
+  const sorted = adj.sort((a, b) => b.overall - a.overall).slice(0, 10);
   const tmpl = MIN_TEMPLATE.slice(0, sorted.length);
   const sum = tmpl.reduce((a, b) => a + b, 0);
   const scale = 200 / sum;
