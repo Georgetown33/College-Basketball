@@ -104,13 +104,13 @@ const BIG_EAST = [
   ]},
   // Roster closed 5/14 at 15. Jalen Jackson granted the medical redshirt, active.
   { name: 'Butler', roster: [
-    p('Asim Djulovic', 'PF', 70), p('Jalen Jackson', 'PG', 68),
-    p('Drayton Jones', 'C', 67), p('Jordan Ellerbee', 'SG', 67),
-    p('Treyson Anderson', 'PF', 65), p('Herly Brutus', 'SF', 63),
-    p('Eduardo Klafke', 'SG', 62), p('Samu Adler', 'SG', 61),
-    p('Kevin Ndzie', 'C', 60), p('Marko Maric', 'SF', 60),
+    p('Asim Djulovic', 'PF', 68), p('Jalen Jackson', 'PG', 66),
+    p('Drayton Jones', 'C', 65), p('Jordan Ellerbee', 'SG', 65),
+    p('Treyson Anderson', 'PF', 63), p('Herly Brutus', 'SF', 63),
+    p('Eduardo Klafke', 'SG', 62), p('Samu Adler', 'SG', 59),
+    p('Kevin Ndzie', 'C', 58), p('Marko Maric', 'SF', 58),
     p('Baron Walker', 'SF', 60), p('Samis Calderon', 'PF', 59),
-    p('Christian Moore', 'SF', 58),
+    p('Christian Moore', 'SF', 56),
   ]},
 ];
 
