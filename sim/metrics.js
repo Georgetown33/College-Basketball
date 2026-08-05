@@ -77,6 +77,11 @@ const META = {
   'Georgetown 2026-27 (no Miller)': { ret: 0.30, tempo: 66.5 },
   'Georgetown 2025-26': { ret: 0.25, tempo: 66.5 },
 };
+// --- Backtest-tuned constants (see backtest_history.js) ---
+const SPREAD_MULT  = 1.7;   // widen AdjEM spread; untuned champion won 15.2 of 20 vs 18.0 actual
+const LEAGUE_PIVOT = 7.0;   // approx Big East average AdjEM (pivot for the widening)
+const PORTAL_PEN   = 9.0;   // AdjEM docked per unit of returning-production shortfall below 0.35
+
 const ANCHOR_WEIGHT = 0.5; // anchored lens
 
 // Global calibration: fit raw-model AdjEM -> real scale using the two "clean"
@@ -179,20 +184,38 @@ function ratings(team) {
   const baseAdjD = AVG_EFF - D_OFFSET - r.defEM;
   const baseEM = baseAdjO - baseAdjD;
 
-  // Methodological adjustments
-  const expAdj = (meta.ret - 0.30) * 8;          // experience / returning minutes
+  // Methodological adjustments. expAdj coefficient raised 8 -> 13 after backtest:
+  // every major public system (KenPom, ESPN BPI, EvanMiya) treats returning
+  // minutes as a primary input, and 3 seasons of Big East results show continuity
+  // teams hit their projection while portal rebuilds scatter.
+  const expAdj = (meta.ret - 0.30) * 13;         // experience / returning minutes
   const talentAdj = (r.top2net - 9) * 0.25;        // top-end talent / transfers
   const starAdj = Math.max(0, r.bestNet - 5) * 0.5; // single-best-player impact
   const defAdj = (r.defEM - 1.0) * 0.5;            // defensive identity
 
+  // ---- BACKTEST-DERIVED CORRECTION (see backtest_history.js) -----------------
+  // Roster-sum models systematically OVERRATE portal-heavy, low-continuity teams
+  // (Seton Hall '24-25: portal haul -> 2-18; Arkansas/Miami '23-24; St. John's
+  // '25-26 stumbled at preseason #5). KenPom, ESPN BPI and EvanMiya all use
+  // returning minutes as a primary input. History: continuity teams miss small,
+  // portal teams miss huge in BOTH directions. So: penalize the mean and widen
+  // the band for rosters under ~35% returning production.
+  const portalPenalty = Math.max(0, 0.35 - meta.ret) * PORTAL_PEN;
+
   const cal = em => CAL_SLOPE * em + CAL_INT; // raw-model -> real scale
-  const kenpom   = cal(baseEM + expAdj * 0.80 + talentAdj * 0.30);
-  const torvik   = cal(baseEM + expAdj * 0.30 + talentAdj * 0.90);
-  const evanmiya = cal(baseEM + expAdj * 0.20 + starAdj + defAdj);
+  const kenpom   = cal(baseEM + expAdj * 0.80 + talentAdj * 0.30) - portalPenalty;
+  const torvik   = cal(baseEM + expAdj * 0.30 + talentAdj * 0.90) - portalPenalty;
+  const evanmiya = cal(baseEM + expAdj * 0.20 + starAdj + defAdj) - portalPenalty;
   let consensus  = (kenpom + torvik + evanmiya) / 3;
 
   // Blend toward a real published anchor if provided
   if (meta.anchorEM != null) consensus = (1 - ANCHOR_WEIGHT) * consensus + ANCHOR_WEIGHT * meta.anchorEM;
+
+  // Spread calibration: 3 seasons of actual Big East records show the champion
+  // wins ~18 of 20 and the range top-to-bottom is ~15 wins. The untuned model
+  // produced a champion at 15.2 and a range of 11.9 — too compressed. Widening
+  // the AdjEM spread about a league-average pivot fixes the distribution.
+  consensus = LEAGUE_PIVOT + (consensus - LEAGUE_PIVOT) * SPREAD_MULT;
 
   // Distribute final delta across O/D so AdjO-AdjD == consensus
   const delta = consensus - baseEM;
