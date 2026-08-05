@@ -72,8 +72,7 @@ const META = {
   'Georgetown 2026-27 (no Miller)': { ret: 0.30, tempo: 66.5 },
   'Georgetown 2025-26': { ret: 0.25, tempo: 66.5 },
 };
-const ANCHOR_WEIGHT = 0.0; // anchors OFF: ranking is pure bottom-up player analytics
-                           // (opponent-adjusted production), not poll/Torvik-blended
+const ANCHOR_WEIGHT = 0.5; // anchored lens
 
 // Global calibration: fit raw-model AdjEM -> real scale using the two "clean"
 // Torvik anchors (UConn model +35.6 -> #10/+23; Marquette model +24.7 -> #27/+15).
@@ -197,7 +196,7 @@ function ratings(team) {
 
   const tempo = meta.tempo;
   const barthag = normalCDF((consensus * tempo / 100) / GAME_SD);
-  const natRank = Math.max(1, Math.min(364, Math.round(RANK_A * Math.exp(-RANK_K * consensus))));
+  const natRank = rankFromEM(consensus);
 
   return {
     name: team.name, adjO, adjD, adjEM: consensus, tempo, barthag, natRank,
@@ -206,6 +205,12 @@ function ratings(team) {
   };
 }
 
-function rankFromEM(em) { return Math.max(1, Math.min(364, Math.round(RANK_A * Math.exp(-RANK_K * em)))); }
+function rankFromEM(em) {
+  // D1 AdjEM is approximately normal (mean 0 by construction, SD ~11) across 364
+  // teams. This tracks the real distribution across the WHOLE range; the old
+  // exponential fit was only valid near the top and slammed every sub-zero team
+  // to #364. Ties out to anchors: +23 -> #7, +15 -> #31, 0 -> #182 (D1 avg).
+  return Math.max(1, Math.min(364, Math.round(364 * (1 - normalCDF(em / 11)))));
+}
 
 module.exports = { ratings, volatility, fourFactors, rawTeam, rankFromEM, normalCDF, clamp, AVG_EFF, AVG_TEMPO, GAME_SD, META };
