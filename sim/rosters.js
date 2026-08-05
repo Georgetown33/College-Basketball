@@ -22,8 +22,8 @@ const GEORGETOWN_2627 = {
   roster: [
     p('Vyctorius Miller', 'SG', 68),  // Okla St 10.8, decent-not-elite efficiency
     p('Josiah Parker', 'SF', 67),     // FAU 51.8% FG + rebounding, Tier-B AAC
-    p('Jaland Lowe', 'PG', 68),       // Pitt 16.8/5.5 ACC — real high-major volume; 50.5% TS docks him ~6, not ~12
-    p('Chol Machot', 'C', 63),        // CAA DPOY blocks, putback offense — comp-discounted
+    p('Jaland Lowe', 'PG', 70),       // Pitt 16.8/5.5 ACC — real high-major volume; 50.5% TS docks him ~6, not ~12
+    p('Chol Machot', 'C', 65),        // CAA DPOY blocks, putback offense — comp-discounted
     p('Caleb Williams', 'SF', 62),    // low-usage BE glue, eFG 50.9 / PER 10.6
     p('Gabriel Landeira', 'PG', 60),  // Brazil NBB playmaker, unproven NCAA
     p('Elmarko Jackson', 'SG', 60),   // never produced at Kansas (40.6% FG), post-ACL

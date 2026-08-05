@@ -58,7 +58,7 @@ const BIG_EAST = [
   ]},
   // McAndrew (~13.3 proj) and Greer both cleared — injury discounts removed.
   { name: 'Creighton', roster: [
-    p('Oswin Erhunmwunse', 'C', 76), p('Wes Enis', 'PG', 74),
+    p('Oswin Erhunmwunse', 'C', 76), p('Wes Enis', 'PG', 70),
     p('Austin Swartz', 'SG', 73), p('Jasen Green', 'PF', 71),
     p('BJ Davis', 'PG', 70), p('Jackson McAndrew', 'SF', 70),
     p('Isaac Traudt', 'SF', 65), p('Hudson Greer', 'SG', 64),
@@ -76,7 +76,7 @@ const BIG_EAST = [
   ]},
   // Byrd + Pate both confirmed staying (Pate turned down NBA two-ways for eligibility).
   { name: 'Providence', roster: [
-    p('Malik Mack', 'PG', 75), p('Miles Byrd', 'SG', 74),
+    p('Malik Mack', 'PG', 72), p('Miles Byrd', 'SG', 74),
     p('Devin Vanterpool', 'SG', 71), p('Arrinten Page', 'C', 70),
     p('Ryan Mela', 'SG', 70), p('Ryan Sabol', 'SG', 68),
     p('Dink Pate', 'SG', 66), p('Samson Aletan', 'C', 63),
@@ -95,9 +95,9 @@ const BIG_EAST = [
   GEORGETOWN_2627,
   // +Copeland (NJCAA National POY, 19.8/7.9 on 67% FG) is a genuine frontcourt add.
   { name: 'Seton Hall', roster: [
-    p('Devin Williams', 'C', 71), p('Del Jones', 'PG', 70),
+    p('Devin Williams', 'C', 71), p('Del Jones', 'PG', 65),
     p('Rodney Brown Jr.', 'SF', 70), p('Mayar Wol', 'PF', 69),
-    p('Terry Copeland', 'PF', 68), p('Kareem Thomas', 'SG', 68),
+    p('Terry Copeland', 'PF', 63), p('Kareem Thomas', 'SG', 68),
     p('Roddie Anderson III', 'PG', 64), p('Simeon Wilcher', 'SG', 63),
     p('Abdulai Fanta Kabba', 'C', 62), p('Trey Parker', 'PG', 60),
     p('Nathan Mariano', 'PF', 60), p('Darien Moore', 'SG', 58),
