@@ -27,10 +27,11 @@ const GEORGETOWN_2627 = {
     p('Caleb Williams', 'SF', 62),    // low-usage BE glue, eFG 50.9 / PER 10.6
     p('Gabriel Landeira', 'PG', 60),  // Brazil NBB playmaker, unproven NCAA
     p('Elmarko Jackson', 'SG', 60),   // never produced at Kansas (40.6% FG), post-ACL
+    p('Pedro Pastre', 'SF', 60),      // 6-6 Brazilian pro (Pinheiros, NBB), committed 6/8/26
     p('Justin Caldwell', 'PF', 58),   // freshman, no college data
     p('Kayvaun Mulready', 'SG', 58),  // deep-bench
     p('Seal Diouf', 'C', 58),         // redshirted, no sample
-    p('Athan Olivier', 'SG', 57),     // freshman project
+    p('Athan Olivier', 'PG', 57),     // 6-0 freshman project (PG, not SG)
   ],
 };
 
