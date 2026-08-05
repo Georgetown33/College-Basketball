@@ -22,8 +22,9 @@ const p = (name, pos, overall) => ({ name, pos, overall, morale: M });
 const BIG_EAST = [
   // Polls have them #4-5 nationally. Added a 7-0 body + Real Madrid U22 POY.
   { name: 'UConn', roster: [
+    p('Jacob Ross', 'SF', 53),
     p('Silas Demary Jr.', 'PG', 80), p('Braylon Mullins', 'SG', 75),
-    p('Najai Hines', 'C', 73), p('Nikolas Khamenia', 'SF', 68),
+    p('Najai Hines', 'C', 73), p('Nikolas Khamenia', 'SF', 71),
     p('Nils Machowski', 'SG', 66), p('Colben Landrew', 'SF', 66),
     p('Jayden Ross', 'SF', 65), p('Egor Amosov', 'SF', 64),
     p('Elmir Dzafic', 'C', 64), p('Oskar Giltay', 'C', 63),
@@ -31,7 +32,8 @@ const BIG_EAST = [
   ]},
   // MAJOR HIT: Freeman (74) out for the year, torn Achilles. Replacements are 62s.
   { name: "St. John's", roster: [
-    p('Tounde Yessoufou', 'SG', 80), p('Ian Jackson', 'SG', 77),
+    p('Zsombor Maronka', 'PF', 64),
+    p('Tounde Yessoufou', 'SG', 80), p('Ian Jackson', 'SG', 69),
     p('Quinn Ellis', 'PG', 72), p('Babacar Sane', 'PF', 66),
     p('Ruben Prey', 'C', 63), p('Kyle Cuffe Jr.', 'PG', 62),
     p('Avery Brown', 'PG', 62), p('Djordije Jovanovic', 'SF', 62),
@@ -49,44 +51,48 @@ const BIG_EAST = [
   ]},
   // Borovicanin's 5th year (won on injunction) is a real add — 10.8/7.4 of Big East production.
   { name: 'Xavier', roster: [
+    p('Nikolaos Chitikoudis', 'PF', 69),
     p('Michael Nwoko', 'C', 80), p('Jovan Milicevic', 'PF', 78),
-    p('Chance Westry', 'PG', 73), p('Tru Washington', 'SG', 72),
-    p('Filip Borovicanin', 'PF', 72), p('Ruben Dominguez', 'SG', 71),
+    p('Chance Westry', 'PG', 78), p('Tru Washington', 'SG', 72),
+    p('Filip Borovicanin', 'PF', 79), p('Ruben Dominguez', 'SG', 71),
     p('Rolyns Aligbe', 'PF', 64), p('Gabriel Pozzato', 'SF', 64),
     p('Kalek House', 'PG', 60), p('Asher Elson', 'SF', 60),
     p('Harrison Aligbe', 'SF', 58), p('Gedeon Basson', 'PG', 58),
   ]},
   // McAndrew (~13.3 proj) and Greer both cleared — injury discounts removed.
   { name: 'Creighton', roster: [
-    p('Oswin Erhunmwunse', 'C', 76), p('Wes Enis', 'PG', 70),
-    p('Austin Swartz', 'SG', 73), p('Jasen Green', 'PF', 71),
-    p('BJ Davis', 'PG', 70), p('Jackson McAndrew', 'SF', 70),
+    p('Shane Thomas', 'SG', 56),
+    p('Oswin Erhunmwunse', 'C', 76), p('Wes Enis', 'PG', 73),
+    p('Austin Swartz', 'SG', 73), p('Jasen Green', 'PF', 72),
+    p('BJ Davis', 'PG', 70), p('Jackson McAndrew', 'SF', 72),
     p('Isaac Traudt', 'SF', 65), p('Hudson Greer', 'SG', 64),
     p('Kayden Edwards', 'SG', 63), p('Katrelle Harmon', 'PG', 62),
     p('Trevon Carter-Givens', 'C', 59), p('Wesly Rosa', 'C', 58),
   ]},
   // No changes; James locked in (withdrew from draft before the 5/27 deadline).
   { name: 'Marquette', roster: [
-    p('Nigel James', 'PG', 80), p('Sananda Fru', 'C', 74),
+    p('Ian Miletic', 'SF', 58), p('Joshua Clark', 'C', 55),
+    p('Nigel James', 'PG', 82), p('Sananda Fru', 'C', 74),
     p('Royce Parham', 'PF', 73), p('Adrien Stevens', 'SG', 71),
-    p('Nolan Minessale', 'PG', 69), p('Caedin Hamilton', 'PF', 63),
-    p('Damarius Owens', 'SG', 63), p('Alex Egbuonu', 'PF', 62),
+    p('Nolan Minessale', 'PG', 69), p('Caedin Hamilton', 'PF', 65),
+    p('Damarius Owens', 'SG', 65), p('Alex Egbuonu', 'PF', 62),
     p('Colton Crowdis', 'PG', 60), p('Ethan Johnston', 'SF', 59),
-    p('Nash Walker', 'SG', 58), p('Michael Phillips', 'SF', 58),
+    p('Nash Walker', 'SG', 58), p('Michael Phillips', 'SF', 61),
   ]},
   // Byrd + Pate both confirmed staying (Pate turned down NBA two-ways for eligibility).
   { name: 'Providence', roster: [
-    p('Malik Mack', 'PG', 72), p('Miles Byrd', 'SG', 74),
+    p('Malik Mack', 'PG', 72), p('Miles Byrd', 'SG', 71),
     p('Devin Vanterpool', 'SG', 71), p('Arrinten Page', 'C', 70),
     p('Ryan Mela', 'SG', 70), p('Ryan Sabol', 'SG', 68),
-    p('Dink Pate', 'SG', 66), p('Samson Aletan', 'C', 63),
+    p('Dink Pate', 'SG', 78), p('Samson Aletan', 'C', 63),
     p('Jacob Bannarbie', 'PF', 63), p('Gavin Hightower', 'PG', 61),
     p('Leonardo Marangon', 'SF', 60), p('Clyde Walters', 'SF', 58),
   ]},
   // Gwath downgraded 80->76: knee surgery + hip flexor, ~19 mpg, no clean bill of health.
   { name: 'DePaul', roster: [
+    p('Amsal Delalic', 'PF', 62),
     p('Magoon Gwath', 'C', 76), p('Ade Popoola', 'SF', 71),
-    p('Kahmare Holmes', 'SF', 70), p('Koree Cotton', 'SG', 68),
+    p('Kahmare Holmes', 'SF', 73), p('Koree Cotton', 'SG', 68),
     p('Layden Blocker', 'PG', 66), p('Wilson Jacques', 'PF', 66),
     p('Noah Meeusen', 'SG', 65), p('Kruz McClure', 'SF', 60),
     p('Theo Pierre-Justin', 'PF', 58), p('Fabian Flores', 'C', 58),
@@ -95,17 +101,18 @@ const BIG_EAST = [
   GEORGETOWN_2627,
   // +Copeland (NJCAA National POY, 19.8/7.9 on 67% FG) is a genuine frontcourt add.
   { name: 'Seton Hall', roster: [
-    p('Devin Williams', 'C', 71), p('Del Jones', 'PG', 65),
-    p('Rodney Brown Jr.', 'SF', 70), p('Mayar Wol', 'PF', 69),
-    p('Terry Copeland', 'PF', 63), p('Kareem Thomas', 'SG', 68),
-    p('Roddie Anderson III', 'PG', 64), p('Simeon Wilcher', 'SG', 63),
+    p('Mihailo Petrovic', 'PG', 66), p('Chris Nwuli', 'PF', 60),
+    p('Devin Williams', 'C', 67), p('Del Jones', 'PG', 69),
+    p('Rodney Brown Jr.', 'SF', 73), p('Mayar Wol', 'PF', 69),
+    p('Terry Copeland', 'PF', 63), p('Kareem Thomas', 'SG', 73),
+    p('Roddie Anderson III', 'PG', 66), p('Simeon Wilcher', 'SG', 63),
     p('Abdulai Fanta Kabba', 'C', 62), p('Trey Parker', 'PG', 60),
     p('Nathan Mariano', 'PF', 60), p('Darien Moore', 'SG', 58),
   ]},
   // Roster closed 5/14 at 15. Jalen Jackson granted the medical redshirt, active.
   { name: 'Butler', roster: [
-    p('Asim Djulovic', 'PF', 68), p('Jalen Jackson', 'PG', 66),
-    p('Drayton Jones', 'C', 65), p('Jordan Ellerbee', 'SG', 65),
+    p('Asim Djulovic', 'PF', 65), p('Jalen Jackson', 'PG', 66),
+    p('Drayton Jones', 'C', 63), p('Jordan Ellerbee', 'SG', 65),
     p('Treyson Anderson', 'PF', 63), p('Herly Brutus', 'SF', 63),
     p('Eduardo Klafke', 'SG', 62), p('Samu Adler', 'SG', 59),
     p('Kevin Ndzie', 'C', 58), p('Marko Maric', 'SF', 58),

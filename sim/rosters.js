@@ -25,9 +25,9 @@ const GEORGETOWN_2627 = {
     p('Jaland Lowe', 'PG', 70),       // Pitt 16.8/5.5 ACC — real high-major volume; 50.5% TS docks him ~6, not ~12
     p('Chol Machot', 'C', 65),        // CAA DPOY blocks, putback offense — comp-discounted
     p('Caleb Williams', 'SF', 62),    // low-usage BE glue, eFG 50.9 / PER 10.6
-    p('Gabriel Landeira', 'PG', 60),  // Brazil NBB playmaker, unproven NCAA
+    p('Gabriel Landeira', 'PG', 62),  // Brazil NBB playmaker, unproven NCAA
     p('Elmarko Jackson', 'SG', 60),   // never produced at Kansas (40.6% FG), post-ACL
-    p('Pedro Pastre', 'SF', 60),      // 6-6 Brazilian pro (Pinheiros, NBB), committed 6/8/26
+    p('Pedro Pastre', 'SF', 63),      // 6-6 Brazilian pro (Pinheiros, NBB), committed 6/8/26
     p('Justin Caldwell', 'PF', 58),   // freshman, no college data
     p('Kayvaun Mulready', 'SG', 58),  // deep-bench
     p('Seal Diouf', 'C', 58),         // redshirted, no sample

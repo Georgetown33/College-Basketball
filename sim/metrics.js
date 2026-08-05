@@ -58,22 +58,18 @@ const OFF_SHARE = {
 //   UConn #10, Marquette #27, St. John's #52 -> AdjEM via the realistic rank curve
 //   below. KenPom/EvanMiya don't publish preseason until fall (n/a).
 const META = {
-  // Anchors current to AUG 2026. UConn sits #4-5 in the newest polls (ESPN 8/3,
-  // CBS v16, Rothstein) though Torvik's 7/2 top five (Duke/Florida/Houston/
-  // Illinois/Arizona) is cooler on them — blended to ~#8. St. John's marked DOWN:
-  // Hoops HQ's 7/20 update headlined "St. John's Tumbles" and Freeman's torn
-  // Achilles (7/1) removed their #3 player.
-  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 22.0 },  // ~#8 blended (polls #4-5, Torvik cooler)
-  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 13.5 },  // marked down: Freeman out + "SJU tumbles" 7/20
-  'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27 (5/1 snapshot, stale)
-  'Creighton':          { ret: 0.55, tempo: 67.5, anchorEM: 13.0 },  // Torvik ~#36 / 5th in BE (5/1 snapshot)
-  'Villanova':          { ret: 0.18, tempo: 64.5 },
-  'Xavier':             { ret: 0.15, tempo: 68.0 },
-  'Providence':         { ret: 0.06, tempo: 69.0 },
-  'DePaul':             { ret: 0.38, tempo: 67.5 },
-  'Seton Hall':         { ret: 0.08, tempo: 66.0 },
-  'Butler':             { ret: 0.25, tempo: 65.5 },
-  'Georgetown 2026-27': { ret: 0.30, tempo: 66.5 },
+  // anchorEM from published Aug-2026 sources, converted via the rank<->EM curve.
+  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 23.5 }, // CBS #2 / Parrish #4 / Torvik #10 -> ~#5
+  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 18.8 }, // ESPN #15 / CBS #17 (post-Freeman fall)
+  'Villanova':          { ret: 0.18, tempo: 64.5, anchorEM: 16.3 }, // Rothstein #25, Katz 12-seed
+  'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.9 }, // Torvik #27
+  'Creighton':          { ret: 0.55, tempo: 67.5, anchorEM: 14.2 }, // Torvik #36, 5th in Big East
+  'Xavier':             { ret: 0.15, tempo: 68.0, anchorEM: 14.0 }, // BUR #46 natl; VU Hoops 4th-6th in BE
+  'Providence':         { ret: 0.06, tempo: 69.0 },                 // no published number
+  'DePaul':             { ret: 0.38, tempo: 67.5 },                 // no published number
+  'Seton Hall':         { ret: 0.08, tempo: 66.0 },                 // unranked anywhere
+  'Butler':             { ret: 0.25, tempo: 65.5, anchorEM: -2.0 }, // Torvik projects last in Big East
+  'Georgetown 2026-27': { ret: 0.30, tempo: 66.5 },                 // nothing published at all
   'Georgetown 2026-27 (no Miller)': { ret: 0.30, tempo: 66.5 },
   'Georgetown 2025-26': { ret: 0.25, tempo: 66.5 },
 };
@@ -82,7 +78,9 @@ const SPREAD_MULT  = 1.7;   // widen AdjEM spread; untuned champion won 15.2 of 
 const LEAGUE_PIVOT = 7.0;   // approx Big East average AdjEM (pivot for the widening)
 const PORTAL_PEN   = 9.0;   // AdjEM docked per unit of returning-production shortfall below 0.35
 
-const ANCHOR_WEIGHT = 0.5; // anchored lens
+const ANCHOR_WEIGHT = 0.60; // published anchors get majority weight: 11 single-team
+                            // agent audits inflated teams inconsistently, so the external
+                            // consensus is the global calibration the bottom-up model lacks.
 
 // Global calibration: fit raw-model AdjEM -> real scale using the two "clean"
 // Torvik anchors (UConn model +35.6 -> #10/+23; Marquette model +24.7 -> #27/+15).
@@ -208,14 +206,18 @@ function ratings(team) {
   const evanmiya = cal(baseEM + expAdj * 0.20 + starAdj + defAdj) - portalPenalty;
   let consensus  = (kenpom + torvik + evanmiya) / 3;
 
-  // Blend toward a real published anchor if provided
-  if (meta.anchorEM != null) consensus = (1 - ANCHOR_WEIGHT) * consensus + ANCHOR_WEIGHT * meta.anchorEM;
-
-  // Spread calibration: 3 seasons of actual Big East records show the champion
-  // wins ~18 of 20 and the range top-to-bottom is ~15 wins. The untuned model
-  // produced a champion at 15.2 and a range of 11.9 — too compressed. Widening
-  // the AdjEM spread about a league-average pivot fixes the distribution.
+  // ORDER MATTERS. Widen the roster-derived estimate FIRST (spread calibration is a
+  // property of the bottom-up model), THEN blend toward the published anchor. Doing
+  // it the other way inflated the anchors themselves — UConn's "#5 nationally"
+  // anchor came out the far side of the multiplier looking like #2.
+  //
+  // Spread calibration: 3 seasons of actual Big East records show the champion wins
+  // ~18 of 20 with a ~15-win top-to-bottom range; the untuned model gave 15.2 and 11.9.
   consensus = LEAGUE_PIVOT + (consensus - LEAGUE_PIVOT) * SPREAD_MULT;
+
+  // Blend toward a real published anchor if provided (anchors are already on the
+  // real scale, so they are applied last and are not re-scaled).
+  if (meta.anchorEM != null) consensus = (1 - ANCHOR_WEIGHT) * consensus + ANCHOR_WEIGHT * meta.anchorEM;
 
   // Distribute final delta across O/D so AdjO-AdjD == consensus
   const delta = consensus - baseEM;
