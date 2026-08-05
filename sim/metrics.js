@@ -58,10 +58,15 @@ const OFF_SHARE = {
 //   UConn #10, Marquette #27, St. John's #52 -> AdjEM via the realistic rank curve
 //   below. KenPom/EvanMiya don't publish preseason until fall (n/a).
 const META = {
-  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 26.0 },  // revised: blend Torvik #10 w/ polls (SI#2, CBS top-5) -> ~#6-7
-  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 16.5 },  // revised up: Yessoufou makes Torvik #52 stale; polls ~#13-15 -> ~#21
-  'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27
-  'Creighton':          { ret: 0.55, tempo: 67.5, anchorEM: 13.0 },  // Torvik preseason ~#36 / 5th in BE
+  // Anchors current to AUG 2026. UConn sits #4-5 in the newest polls (ESPN 8/3,
+  // CBS v16, Rothstein) though Torvik's 7/2 top five (Duke/Florida/Houston/
+  // Illinois/Arizona) is cooler on them — blended to ~#8. St. John's marked DOWN:
+  // Hoops HQ's 7/20 update headlined "St. John's Tumbles" and Freeman's torn
+  // Achilles (7/1) removed their #3 player.
+  'UConn':              { ret: 0.40, tempo: 66.5, anchorEM: 22.0 },  // ~#8 blended (polls #4-5, Torvik cooler)
+  "St. John's":         { ret: 0.25, tempo: 69.5, anchorEM: 13.5 },  // marked down: Freeman out + "SJU tumbles" 7/20
+  'Marquette':          { ret: 0.68, tempo: 68.0, anchorEM: 15.0 },  // Torvik #27 (5/1 snapshot, stale)
+  'Creighton':          { ret: 0.55, tempo: 67.5, anchorEM: 13.0 },  // Torvik ~#36 / 5th in BE (5/1 snapshot)
   'Villanova':          { ret: 0.18, tempo: 64.5 },
   'Xavier':             { ret: 0.15, tempo: 68.0 },
   'Providence':         { ret: 0.06, tempo: 69.0 },
