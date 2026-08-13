@@ -12,14 +12,21 @@ const M = 70; // default morale
 const p = (name, pos, overall, tags = {}) => ({ name, pos, overall, morale: M, ...tags });
 
 // ---------------- GEORGETOWN 2026-27 (OPPONENT-ADJUSTED grades) ----------------
-// Advanced-analytics audit (efficiency x usage x competition). Brutal on the
-// "pedigree" guards: Lowe 64 (50.5% TS / 38% FG at Pitt — inefficient volume),
-// Miller 68 (modest full-season output, mediocre 3P), Machot 63 (elite blocks but
-// CAA-inflated, putback-level offense), E.Jackson 60 (never produced at Kansas).
-// No Georgetown player grades above 68 — lowest team-best in the Big East.
+// Advanced-analytics audit (efficiency x usage x competition), current to Aug 2026.
+// Lowe 70 (16.8/5.5 in the ACC, docked for a 50.5% TS), Miller 68 (modest volume),
+// Machot 65 (elite blocks, CAA-inflated), E.Jackson 60 (never produced at Kansas).
+// NJ Benson (75) is now the roster's high-water mark and its only Tier-A
+// double-digit scorer — see the note on his eligibility below.
 const GEORGETOWN_2627 = {
   name: 'Georgetown 2026-27',
   roster: [
+    // NJ Benson — DePaul transfer, committed Aug 2026 (per user). 6-8 F/C, 11.7 ppg
+    // in the BIG EAST (Tier A, no competition discount) as DePaul's #2 scorer.
+    // Comps: Milicevic 78 (12.4/3.9 BE), Borovicanin 79 (10.8/7.4 BE), Gwath 76.
+    // NOTE: he played 2025-26 as a senior; eligibility presumably restored the way
+    // Borovicanin's and Brennan's were this summer (court injunctions vs the NCAA
+    // age-based model). Flagged, not independently confirmed.
+    p('NJ Benson', 'PF', 75),
     p('Vyctorius Miller', 'SG', 68),  // Okla St 10.8, decent-not-elite efficiency
     p('Josiah Parker', 'SF', 67),     // FAU 51.8% FG + rebounding, Tier-B AAC
     p('Jaland Lowe', 'PG', 70),       // Pitt 16.8/5.5 ACC — real high-major volume; 50.5% TS docks him ~6, not ~12
